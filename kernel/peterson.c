@@ -16,7 +16,7 @@ peterson_init(void)
     petersonlocks[i].flag[0] = 0;
     petersonlocks[i].flag[1] = 0;
     petersonlocks[i].turn = 0;
-    initlock(&petersonlocks[i].lk, "peterson");
+    //initlock(&petersonlocks[i].lk, "peterson");
   }
 }
 
@@ -25,16 +25,16 @@ int
 peterson_create(void)
 {
   for(int i = 0; i < NPETERSON; i++) {
-    acquire(&petersonlocks[i].lk);
+    //acquire(&petersonlocks[i].lk);
     if(petersonlocks[i].active == 0) {
       petersonlocks[i].active = 1;
       petersonlocks[i].flag[0] = 0;
       petersonlocks[i].flag[1] = 0;
       petersonlocks[i].turn = 0;
-      release(&petersonlocks[i].lk);
+      //release(&petersonlocks[i].lk);
       return i;
     }
-    release(&petersonlocks[i].lk);
+    //release(&petersonlocks[i].lk);
   }
   return -1;
 }
@@ -46,12 +46,12 @@ peterson_acquire(int lock_id, int role)
   if(lock_id < 0 || lock_id >= NPETERSON || (role != 0 && role != 1))
     return -1;
     
-  acquire(&petersonlocks[lock_id].lk);
+  //acquire(&petersonlocks[lock_id].lk);
   if(petersonlocks[lock_id].active == 0) {
-    release(&petersonlocks[lock_id].lk);
+    //release(&petersonlocks[lock_id].lk);
     return -1;
   }
-  release(&petersonlocks[lock_id].lk);
+  //release(&petersonlocks[lock_id].lk);
 
   int other = 1 - role;  // The other role
 
@@ -79,12 +79,12 @@ peterson_release(int lock_id, int role)
   if(lock_id < 0 || lock_id >= NPETERSON || (role != 0 && role != 1))
     return -1;
 
-  acquire(&petersonlocks[lock_id].lk);
+  //acquire(&petersonlocks[lock_id].lk);
   if(petersonlocks[lock_id].active == 0) {
-    release(&petersonlocks[lock_id].lk);
+    //release(&petersonlocks[lock_id].lk);
     return -1;
   }
-  release(&petersonlocks[lock_id].lk);
+  //release(&petersonlocks[lock_id].lk);
 
   // Set flag[role] = 0 indicating exit from critical section
   __sync_lock_release(&petersonlocks[lock_id].flag[role]);
@@ -100,9 +100,9 @@ peterson_destroy(int lock_id)
   if(lock_id < 0 || lock_id >= NPETERSON)
     return -1;
 
-  acquire(&petersonlocks[lock_id].lk);
+  //acquire(&petersonlocks[lock_id].lk);
   if(petersonlocks[lock_id].active == 0) {
-    release(&petersonlocks[lock_id].lk);
+    //release(&petersonlocks[lock_id].lk);
     return -1;
   }
   
@@ -110,7 +110,7 @@ peterson_destroy(int lock_id)
   petersonlocks[lock_id].flag[0] = 0;
   petersonlocks[lock_id].flag[1] = 0;
   petersonlocks[lock_id].turn = 0;
-  release(&petersonlocks[lock_id].lk);
+  //release(&petersonlocks[lock_id].lk);
   
   return 0;
 }

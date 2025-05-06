@@ -14,9 +14,9 @@ main(int argc, char *argv[])
   printf("Created Peterson lock with ID: %d\n", lock_id);
   
   int fork_ret = fork();
-  int role = fork_ret > 0 ? 0 : 1;
+  int role = fork_ret > 0 ? 0 : 1; // role = 0 for parent, role = 1 for child
   
-  for (int i = 0; i < 5; i++) {
+  for (int i = 0; i < 100; i++) {
     if (peterson_acquire(lock_id, role) < 0) {
       printf("Failed to acquire lock\n");
       exit(1);
@@ -25,7 +25,7 @@ main(int argc, char *argv[])
     // Critical section
     printf("Process %d (role %d) in critical section, iteration %d\n", 
            getpid(), role, i);
-    sleep(10);  // Sleep for a bit to simulate work
+    //sleep(10);  // Sleep for a bit to simulate work
     printf("Process %d (role %d) leaving critical section\n", getpid(), role);
     
     if (peterson_release(lock_id, role) < 0) {
@@ -34,7 +34,7 @@ main(int argc, char *argv[])
     }
     
     // Wait a bit before next attempt
-    sleep(5);
+    //sleep(5);
   }
   
   if (fork_ret > 0) {
